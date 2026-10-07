@@ -34,7 +34,7 @@ export function GraphBuilder() {
 
   const addService = () => {
     const i = services.length, id = ++nRef.current;
-    setServices([...services, { id, inst: "svc" + i, name: "svc" + i, domain: "", machine: machines[0].id, threads: 4, cores: 2, x: 120 + (i % 4) * 150, y: 90 + Math.floor(i / 4) * 130 }]);
+    setServices([...services, { id, inst: "svc" + i, name: "svc" + i, domain: "", machine: machines[0]!.id, threads: 4, cores: 2, x: 120 + (i % 4) * 150, y: 90 + Math.floor(i / 4) * 130 }]);
     setSel({ t: "s", id });
   };
   const addMachine = () => setMachines([...machines, { id: Math.max(-1, ...machines.map((m) => m.id)) + 1, cores: 40, queues: 20 }]);
@@ -64,12 +64,12 @@ export function GraphBuilder() {
     const p = pt(ev);
     const t = (ev.target as Element).closest("[data-n],[data-h],[data-e]") as HTMLElement | null;
     const d = t?.dataset;
-    if (d?.h) setDrag({ t: "link", id: +d.h, x: p.x, y: p.y });
-    else if (d?.n) {
-      const s = svc(+d.n)!;
+    if (d?.["h"]) setDrag({ t: "link", id: +d["h"], x: p.x, y: p.y });
+    else if (d?.["n"]) {
+      const s = svc(+d["n"])!;
       setSel({ t: "s", id: s.id });
       setDrag({ t: "move", id: s.id, dx: p.x - s.x, dy: p.y - s.y });
-    } else if (d?.e) setSel({ t: "e", id: +d.e });
+    } else if (d?.["e"]) setSel({ t: "e", id: +d["e"] });
     else setSel(null);
     svgRef.current!.setPointerCapture(ev.pointerId);
   };
