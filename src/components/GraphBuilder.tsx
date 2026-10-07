@@ -104,7 +104,7 @@ export function GraphBuilder() {
     const groups: Record<string, { service_name: string; service_domain: string; instances: unknown[] }> = {};
     services.forEach((s) => {
       const m = machines.find((x) => x.id === s.machine)!;
-      const st = next[s.machine];
+      const st = next[s.machine] ?? 0;
       const cores = [...Array(s.cores).keys()].map((i) => st + i);
       next[s.machine] = st + s.cores;
       if (st + s.cores > m.cores) warns.push(`${s.inst}: cores ${st}-${st + s.cores - 1} exceed machine_${m.id} total (${m.cores})`);
@@ -222,7 +222,7 @@ export function GraphBuilder() {
                 if (machines.length < 2) return;
                 const rest = machines.filter((x) => x.id !== m.id);
                 setMachines(rest);
-                setServices(services.map((s) => (s.machine === m.id ? { ...s, machine: rest[0].id } : s)));
+                setServices(services.map((s) => (s.machine === m.id ? { ...s, machine: rest[0]!.id } : s)));
               }}>✕</button>
             </div>
           ))}
